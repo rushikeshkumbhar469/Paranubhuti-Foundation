@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+
+# Environment & secrets
+.env
+.env.local
+.env.*.local
+
+# Generated PDFs
+server/storage/ids/*.pdf
+server/storage/receipts/*.pdf
+server/storage/certificates/*.pdf
+
+# Logs & OS
+*.log
+.DS_Store
+Thumbs.db
+
+# Misc local files
+*.pdf
+
+# Build output
+client/dist/
+
+# IDE
+.vscode/
+.idea/
