@@ -60,7 +60,6 @@ export default function AdminDashboard() {
         adminLogout();
         navigate('/admin/login');
       });
-    loadRequests();
   }, []);
 
   useEffect(() => {

@@ -102,6 +102,28 @@ async function fulfillReceipt(payload, deliveryMethod, requestEmail) {
     outputPath
   );
 
+  let emailSent = false;
+  if (deliveryMethod === 'email' && recipientEmail) {
+    try {
+      const html = buildEmailHtml({
+        recipientName: fullName,
+        headline: 'Your Donation Receipt',
+        body: `<p>Your official donation receipt (No. <strong>${receiptNumber}</strong>) has been approved and is attached to this email.</p>`,
+      });
+
+      await sendMail({
+        to: recipientEmail,
+        subject: `Paranubhuti Foundation – Donation Receipt ${receiptNumber}`,
+        html,
+        pdfPath: outputPath,
+        pdfName: fileName,
+      });
+      emailSent = true;
+    } catch (mailErr) {
+      console.error(`[Mailer Error] Failed to send receipt ${receiptNumber} email:`, mailErr.message);
+    }
+  }
+
   await Receipt.create({
     receiptNumber,
     fullName,
@@ -112,31 +134,15 @@ async function fulfillReceipt(payload, deliveryMethod, requestEmail) {
     pan: pan || '',
     pdfPath: outputPath,
     pdfUrl: `/storage/receipts/${fileName}`,
-    emailSent: deliveryMethod === 'email',
+    emailSent,
   });
-
-  if (deliveryMethod === 'email' && recipientEmail) {
-    const html = buildEmailHtml({
-      recipientName: fullName,
-      headline: 'Your Donation Receipt',
-      body: `<p>Your official donation receipt (No. <strong>${receiptNumber}</strong>) has been approved and is attached to this email.</p>`,
-    });
-
-    await sendMail({
-      to: recipientEmail,
-      subject: `Paranubhuti Foundation – Donation Receipt ${receiptNumber}`,
-      html,
-      pdfPath: outputPath,
-      pdfName: fileName,
-    });
-  }
 
   return {
     documentNumber: receiptNumber,
     pdfPath: outputPath,
     pdfUrl: `/storage/receipts/${fileName}`,
     fileName,
-    emailSent: deliveryMethod === 'email',
+    emailSent,
   };
 }
 
@@ -154,6 +160,28 @@ async function fulfillCertificate(payload, deliveryMethod, requestEmail) {
     outputPath
   );
 
+  let emailSent = false;
+  if (deliveryMethod === 'email' && recipientEmail) {
+    try {
+      const html = buildEmailHtml({
+        recipientName: fullName,
+        headline: 'Your Certificate',
+        body: `<p>Your official certificate (No. <strong>${certificateNumber}</strong>) has been approved and is attached to this email.</p>`,
+      });
+
+      await sendMail({
+        to: recipientEmail,
+        subject: `Paranubhuti Foundation – Certificate ${certificateNumber}`,
+        html,
+        pdfPath: outputPath,
+        pdfName: fileName,
+      });
+      emailSent = true;
+    } catch (mailErr) {
+      console.error(`[Mailer Error] Failed to send certificate ${certificateNumber} email:`, mailErr.message);
+    }
+  }
+
   await Certificate.create({
     certificateNumber,
     type,
@@ -163,31 +191,15 @@ async function fulfillCertificate(payload, deliveryMethod, requestEmail) {
     email: recipientEmail || '',
     pdfPath: outputPath,
     pdfUrl: `/storage/certificates/${fileName}`,
-    emailSent: deliveryMethod === 'email',
+    emailSent,
   });
-
-  if (deliveryMethod === 'email' && recipientEmail) {
-    const html = buildEmailHtml({
-      recipientName: fullName,
-      headline: 'Your Certificate',
-      body: `<p>Your official certificate (No. <strong>${certificateNumber}</strong>) has been approved and is attached to this email.</p>`,
-    });
-
-    await sendMail({
-      to: recipientEmail,
-      subject: `Paranubhuti Foundation – Certificate ${certificateNumber}`,
-      html,
-      pdfPath: outputPath,
-      pdfName: fileName,
-    });
-  }
 
   return {
     documentNumber: certificateNumber,
     pdfPath: outputPath,
     pdfUrl: `/storage/certificates/${fileName}`,
     fileName,
-    emailSent: deliveryMethod === 'email',
+    emailSent,
   };
 }
 

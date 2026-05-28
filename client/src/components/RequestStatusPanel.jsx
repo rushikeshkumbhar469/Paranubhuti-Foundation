@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { getRequestStatus, downloadApprovedRequest } from '../services/api';
 
 const statusStyles = {
@@ -13,6 +13,26 @@ export default function RequestStatusPanel({ initialRequestId = '' }) {
   const [downloadLoading, setDownloadLoading] = useState(false);
   const [error, setError] = useState('');
   const [statusData, setStatusData] = useState(null);
+
+  useEffect(() => {
+    if (initialRequestId) {
+      setRequestId(initialRequestId);
+      const fetchStatus = async () => {
+        setLoading(true);
+        setError('');
+        setStatusData(null);
+        try {
+          const result = await getRequestStatus(initialRequestId);
+          setStatusData(result.data);
+        } catch (err) {
+          setError(err.message || 'Could not find that request.');
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchStatus();
+    }
+  }, [initialRequestId]);
 
   const handleCheck = async (e) => {
     e.preventDefault();
