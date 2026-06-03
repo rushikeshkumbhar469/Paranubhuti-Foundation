@@ -1,27 +1,29 @@
 # Dependencies
 node_modules/
+Frontend/node_modules/
+Backend/node_modules/
 
-# Environment & secrets
+# Environment Variables
 .env
-.env.local
-.env.*.local
+Frontend/.env
+Backend/.env
 
-# Generated PDFs
-server/storage/ids/*.pdf
-server/storage/receipts/*.pdf
-server/storage/certificates/*.pdf
+# Build folders
+Frontend/dist/
+Frontend/build/
+Backend/dist/
+Backend/build/
 
-# Logs & OS
+# Logs
 *.log
+logs/
+
+# Coverage
+coverage/
+
+# VS Code
+.vscode/
+
+# OS Files
 .DS_Store
 Thumbs.db
-
-# Misc local files
-*.pdf
-
-# Build output
-client/dist/
-
-# IDE
-.vscode/
-.idea/
